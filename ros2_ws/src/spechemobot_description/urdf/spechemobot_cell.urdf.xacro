@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<robot name="spechemobot_cell" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="pi" value="3.141592653589793"/>
+
+  <material name="steel">
+    <color rgba="0.55 0.58 0.62 1.0"/>
+  </material>
+  <material name="safety_yellow">
+    <color rgba="0.95 0.72 0.05 1.0"/>
+  </material>
+  <material name="hot_orange">
+    <color rgba="0.95 0.32 0.05 1.0"/>
+  </material>
+
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.18" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.65 0.28"/>
+      </geometry>
+      <material name="safety_yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.18" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.65 0.28"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="60.0"/>
+      <origin xyz="0 0 0.18"/>
+      <inertia ixx="2.0" ixy="0" ixz="0" iyy="3.0" iyz="0" izz="4.0"/>
+    </inertial>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:macro name="wheel" params="prefix y">
+    <link name="${prefix}_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.14" length="0.09"/>
+        </geometry>
+        <material name="steel"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.14" length="0.09"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="4.0"/>
+        <inertia ixx="0.04" ixy="0" ixz="0" iyy="0.04" iyz="0" izz="0.06"/>
+      </inertial>
+    </link>
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_wheel"/>
+      <origin xyz="0 ${y} 0.14" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="left" y="0.34"/>
+  <xacro:wheel prefix="right" y="-0.34"/>
+
+  <link name="arm_base_link">
+    <visual>
+      <origin xyz="0 0 0.06" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.16" length="0.12"/>
+      </geometry>
+      <material name="steel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.06" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.16" length="0.12"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="8.0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0" iyy="0.05" iyz="0" izz="0.08"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="arm_base_link"/>
+    <origin xyz="0 0 0.32" rpy="0 0 0"/>
+  </joint>
+
+  <link name="arm_shoulder_link">
+    <visual>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.14 0.14 0.5"/>
+      </geometry>
+      <material name="safety_yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.25" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.14 0.14 0.5"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="5.0"/>
+      <inertia ixx="0.11" ixy="0" ixz="0" iyy="0.11" iyz="0" izz="0.02"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_shoulder_joint" type="revolute">
+    <parent link="arm_base_link"/>
+    <child link="arm_shoulder_link"/>
+    <origin xyz="0 0 0.12" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-${pi/2}" upper="${pi/2}" effort="120" velocity="1.5"/>
+  </joint>
+
+  <link name="arm_elbow_link">
+    <visual>
+      <origin xyz="0 0 0.21" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.12 0.12 0.42"/>
+      </geometry>
+      <material name="steel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.21" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.12 0.12 0.42"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="4.0"/>
+      <inertia ixx="0.06" ixy="0" ixz="0" iyy="0.06" iyz="0" izz="0.01"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_elbow_joint" type="revolute">
+    <parent link="arm_shoulder_link"/>
+    <child link="arm_elbow_link"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.4" upper="2.4" effort="80" velocity="1.8"/>
+  </joint>
+
+  <link name="arm_wrist_link">
+    <visual>
+      <origin xyz="0 0 0.09" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.055" length="0.18"/>
+      </geometry>
+      <material name="hot_orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.09" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.055" length="0.18"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.005"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_wrist_joint" type="revolute">
+    <parent link="arm_elbow_link"/>
+    <child link="arm_wrist_link"/>
+    <origin xyz="0 0 0.42" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-${pi}" upper="${pi}" effort="30" velocity="2.5"/>
+  </joint>
+
+  <link name="tool0">
+    <visual>
+      <origin xyz="0 0 0.04" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.14 0.02 0.04"/>
+      </geometry>
+      <material name="safety_yellow"/>
+    </visual>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <joint name="tool0_joint" type="fixed">
+    <parent link="arm_wrist_link"/>
+    <child link="tool0"/>
+    <origin xyz="0 0 0.18" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.08 0.12 0.06"/>
+      </geometry>
+      <material name="steel"/>
+    </visual>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="tool0"/>
+    <child link="camera_link"/>
+    <origin xyz="0 0 0.06" rpy="0 0 0"/>
+  </joint>
+
+</robot>

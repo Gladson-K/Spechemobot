@@ -1,0 +1,20 @@
+# Headless CI override. Gazebo runs server-only; O3DE uses the null renderer.
+# Usage:
+#   docker compose --profile gazebo-jazzy -f docker-compose.yaml -f profiles/headless.yaml up -d
+services:
+  gazebo-jazzy:
+    environment:
+      DISPLAY: ""
+      GZ_HEADLESS: "1"
+  gazebo-lyrical:
+    environment:
+      DISPLAY: ""
+      GZ_HEADLESS: "1"
+  o3de-jazzy:
+    environment:
+      DISPLAY: ""
+      O3DE_RHI: "null"
+  o3de-lyrical:
+    environment:
+      DISPLAY: ""
+      O3DE_RHI: "null"

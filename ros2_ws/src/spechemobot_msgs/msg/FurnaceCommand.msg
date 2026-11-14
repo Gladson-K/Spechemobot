@@ -1,0 +1,5 @@
+std_msgs/Header header
+float64 target_temperature_c
+float64 heater_power_limit_kw
+bool enable
+bool emergency_stop

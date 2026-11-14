@@ -1,0 +1,219 @@
+name: spechemobot-v3
+
+x-common: &common
+  working_dir: /workspace/Spechemobot
+  volumes:
+    - ../..:/workspace/Spechemobot
+    - spechemobot-ccache:/home/dev/.cache/ccache
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  init: true
+  tty: true
+  stdin_open: true
+  network_mode: host
+  ipc: host
+  group_add:
+    - video
+  environment:
+    DISPLAY: ${DISPLAY:-:0}
+    RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+  command: ["bash", "-lc", "exec sleep infinity"]
+
+x-gazebo: &gazebo
+  <<: *common
+  volumes:
+    - ../..:/workspace/Spechemobot
+    - spechemobot-ccache:/home/dev/.cache/ccache
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  environment:
+    DISPLAY: ${DISPLAY:-:0}
+    RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+    SIM_BACKEND: gazebo
+    SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+    GZ_SIM_RESOURCE_PATH: /workspace/Spechemobot/sim/gazebo/models:/workspace/Spechemobot/sim/gazebo/worlds
+
+x-o3de: &o3de
+  <<: *common
+  volumes:
+    - ../..:/workspace/Spechemobot
+    - spechemobot-ccache:/home/dev/.cache/ccache
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  environment:
+    DISPLAY: ${DISPLAY:-:0}
+    RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+    SIM_BACKEND: o3de
+    SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+    O3DE_RHI: ${O3DE_RHI:-vulkan}
+    O3DE_HOME: /opt/O3DE/26.05
+    O3DE_EXTRAS_HOME: /opt/o3de-extras
+
+services:
+  gazebo-jazzy:
+    profiles: ["gazebo-jazzy", "all"]
+    <<: *gazebo
+    build:
+      context: ./sim-gazebo
+      args:
+        ROS_DISTRO: jazzy
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+    image: spechemobot/sim-gazebo:jazzy
+    container_name: spechemobot-gazebo-jazzy
+    environment:
+      ROS_DISTRO: jazzy
+      ROS_DOMAIN_ID: ${GAZEBO_JAZZY_DOMAIN:-42}
+      SIM_BACKEND: gazebo
+      SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+      DISPLAY: ${DISPLAY:-:0}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+
+  gazebo-lyrical:
+    profiles: ["gazebo-lyrical", "all"]
+    <<: *gazebo
+    build:
+      context: ./sim-gazebo
+      args:
+        ROS_DISTRO: lyrical
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+    image: spechemobot/sim-gazebo:lyrical
+    container_name: spechemobot-gazebo-lyrical
+    environment:
+      ROS_DISTRO: lyrical
+      ROS_DOMAIN_ID: ${GAZEBO_LYRICAL_DOMAIN:-43}
+      SIM_BACKEND: gazebo
+      SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+      DISPLAY: ${DISPLAY:-:0}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+
+  o3de-jazzy:
+    profiles: ["o3de-jazzy", "all"]
+    <<: *o3de
+    build:
+      context: ./sim-o3de
+      args:
+        ROS_DISTRO: jazzy
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+        O3DE_VERSION: ${O3DE_VERSION:-26.05}
+    image: spechemobot/sim-o3de:jazzy
+    container_name: spechemobot-o3de-jazzy
+    environment:
+      ROS_DISTRO: jazzy
+      ROS_DOMAIN_ID: ${O3DE_JAZZY_DOMAIN:-44}
+      SIM_BACKEND: o3de
+      SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+      O3DE_RHI: ${O3DE_RHI:-vulkan}
+      O3DE_HOME: /opt/O3DE/26.05
+      O3DE_EXTRAS_HOME: /opt/o3de-extras
+      DISPLAY: ${DISPLAY:-:0}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+
+  o3de-lyrical:
+    profiles: ["o3de-lyrical", "all"]
+    <<: *o3de
+    build:
+      context: ./sim-o3de
+      args:
+        ROS_DISTRO: lyrical
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+        O3DE_VERSION: ${O3DE_VERSION:-26.05}
+    image: spechemobot/sim-o3de:lyrical
+    container_name: spechemobot-o3de-lyrical
+    environment:
+      ROS_DISTRO: lyrical
+      ROS_DOMAIN_ID: ${O3DE_LYRICAL_DOMAIN:-45}
+      SIM_BACKEND: o3de
+      SIM_WORLD: ${SIM_WORLD:-reactor_hall}
+      O3DE_RHI: ${O3DE_RHI:-vulkan}
+      O3DE_HOME: /opt/O3DE/26.05
+      O3DE_EXTRAS_HOME: /opt/o3de-extras
+      DISPLAY: ${DISPLAY:-:0}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+
+  runtime-jazzy:
+    profiles: ["runtime", "all"]
+    <<: *common
+    build:
+      context: ./runtime
+      args:
+        ROS_DISTRO: jazzy
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+    image: spechemobot/runtime:jazzy
+    container_name: spechemobot-runtime-jazzy
+    environment:
+      ROS_DISTRO: jazzy
+      ROS_DOMAIN_ID: ${RUNTIME_JAZZY_DOMAIN:-46}
+      DISPLAY: ${DISPLAY:-:0}
+
+  runtime-lyrical:
+    profiles: ["runtime", "all"]
+    <<: *common
+    build:
+      context: ./runtime
+      args:
+        ROS_DISTRO: lyrical
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        ORT_VERSION: ${ORT_VERSION:-1.20.1}
+    image: spechemobot/runtime:lyrical
+    container_name: spechemobot-runtime-lyrical
+    environment:
+      ROS_DISTRO: lyrical
+      ROS_DOMAIN_ID: ${RUNTIME_LYRICAL_DOMAIN:-47}
+      DISPLAY: ${DISPLAY:-:0}
+
+  ros2-dev-jazzy:
+    profiles: ["dev", "all"]
+    <<: *common
+    build:
+      context: ./ros2
+      args:
+        ROS_DISTRO: jazzy
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: spechemobot/ros2-dev:jazzy
+    container_name: spechemobot-ros2-dev-jazzy
+    environment:
+      ROS_DISTRO: jazzy
+      ROS_DOMAIN_ID: ${ROS2_DEV_DOMAIN:-48}
+      DISPLAY: ${DISPLAY:-:0}
+
+  ros2-dev-lyrical:
+    profiles: ["dev", "all"]
+    <<: *common
+    build:
+      context: ./ros2
+      args:
+        ROS_DISTRO: lyrical
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: spechemobot/ros2-dev:lyrical
+    container_name: spechemobot-ros2-dev-lyrical
+    environment:
+      ROS_DISTRO: lyrical
+      ROS_DOMAIN_ID: ${ROS2_DEV_LYRICAL_DOMAIN:-49}
+      DISPLAY: ${DISPLAY:-:0}
+
+  compiler:
+    profiles: ["compiler", "all"]
+    <<: *common
+    build:
+      context: ./compiler
+      args:
+        UBUNTU_VERSION: ${COMPILER_UBUNTU_VERSION:-24.04}
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: spechemobot/compiler:${COMPILER_UBUNTU_VERSION:-24.04}
+    container_name: spechemobot-compiler
+    environment:
+      DISPLAY: ${DISPLAY:-:0}
+
+volumes:
+  spechemobot-ccache:

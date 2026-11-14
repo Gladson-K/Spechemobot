@@ -1,0 +1,33 @@
+{
+    "gem_name": "SpechemobotO3DE",
+    "version": "1.0.0",
+    "display_name": "Spechemobot O3DE",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "Spechemobot",
+    "origin_url": "https://github.com/spechemobot/Spechemobot",
+    "type": "",
+    "summary": "Project module for Spechemobot O3DE simulation.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Spechemobot",
+        "Simulation"
+    ],
+    "platforms": [
+        "Linux"
+    ],
+    "requirements": "",
+    "documentation_url": "",
+    "dependencies": [
+        "ROS2==4.2.0",
+        "ROS2Sensors==1.0.1",
+        "ROS2Controllers==1.1.0",
+        "LevelGeoreferencing==1.0.0"
+    ],
+    "compatible_engines": [
+        "o3de-sdk"
+    ],
+    "engine_api_dependencies": []
+}

@@ -1,0 +1,13 @@
+string batch_id
+float64 target_temperature_c
+float64 hold_time_s
+string product_id
+---
+bool success
+string message
+float64 max_temperature_c
+float64 duration_s
+---
+string phase
+float64 progress
+float64 current_temperature_c

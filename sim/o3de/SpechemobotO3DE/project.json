@@ -1,0 +1,34 @@
+{
+    "project_name": "SpechemobotO3DE",
+    "version": "1.0.0",
+    "project_id": "2b1899dc-156c-4467-a4f3-7e469b964ed2",
+    "origin": "https://github.com/spechemobot/Spechemobot",
+    "license": "Apache-2.0",
+    "display_name": "Spechemobot O3DE",
+    "summary": "Chemical process simulation worlds and ROS 2 sensor scenes for Spechemobot.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "Spechemobot",
+        "Robotics",
+        "Simulation"
+    ],
+    "engine": "o3de-sdk",
+    "compatible_engines": [
+        "o3de-sdk"
+    ],
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "gem_names": [
+        "SpechemobotO3DE",
+        "Atom",
+        "CameraFramework",
+        "ImGui",
+        "ROS2==4.2.0",
+        "ROS2Sensors==1.0.1",
+        "ROS2Controllers==1.1.0",
+        "LevelGeoreferencing==1.0.0"
+    ]
+}

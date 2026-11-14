@@ -1,0 +1,10 @@
+std_msgs/Header header
+string container_id
+string product_id
+string location
+float64 fill_percent
+float64 mass_kg
+float64 temperature_c
+bool hot
+bool attached
+bool defect_detected

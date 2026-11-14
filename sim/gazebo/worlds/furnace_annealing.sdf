@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="furnace_annealing">
+    <physics name="physics" type="ignored">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <gravity>0 0 -9.8066</gravity>
+    <scene>
+      <ambient>0.38 0.36 0.33 1</ambient>
+      <background>0.58 0.54 0.48 1</background>
+      <shadows>true</shadows>
+      <grid>false</grid>
+    </scene>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat"/>
+    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer"/>
+    <plugin filename="gz-sim-air-pressure-system" name="gz::sim::systems::AirPressure"/>
+    <plugin filename="gz-sim-altimeter-system" name="gz::sim::systems::Altimeter"/>
+    <plugin filename="gz-sim-logical-camera-system" name="gz::sim::systems::LogicalCamera"/>
+    <plugin filename="gz-sim-forcetorque-system" name="gz::sim::systems::ForceTorque"/>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 12 0 0 0</pose>
+      <diffuse>1.0 0.82 0.62 1</diffuse>
+      <specular>0.35 0.30 0.25 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.4 0.3 -0.85</direction>
+    </light>
+
+    <atmosphere type="adiabatic">
+      <temperature>310</temperature>
+      <temperature_gradient>0.002</temperature_gradient>
+    </atmosphere>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>51.5074</latitude_deg>
+      <longitude_deg>-0.1278</longitude_deg>
+      <elevation>12</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <include>
+      <uri>model://spechemobot_plant</uri>
+      <name>plant</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://spechemobot_sensor_rig</uri>
+      <name>sensor_rig</name>
+      <pose>0 -6 3.8 0 -0.30 0.93</pose>
+    </include>
+
+    <include>
+      <uri>model://spechemobot_amr</uri>
+      <name>amr_1</name>
+      <pose>7 -5 0 0 0 -1.2</pose>
+    </include>
+
+    <include>
+      <uri>model://spechemobot_arm</uri>
+      <name>arm_1</name>
+      <pose>-4 6 0 0 0 3.14159</pose>
+    </include>
+
+    <model name="annealing_tunnel" static="true">
+      <pose>4.5 6 1.4 0 0 0</pose>
+      <link name="tunnel_body">
+        <collision name="tunnel_collision">
+          <geometry>
+            <box>
+              <size>6 2 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="tunnel_visual">
+          <geometry>
+            <box>
+              <size>6 2 2.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.24 0.12 1</ambient>
+            <diffuse>0.55 0.30 0.12 1</diffuse>
+          </material>
+          <plugin filename="gz-sim-thermal-system" name="gz::sim::systems::Thermal">
+            <temperature>720</temperature>
+          </plugin>
+        </visual>
+        <visual name="tunnel_port">
+          <pose>3.02 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.05 1.2 1.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.35 0.02 1</ambient>
+            <diffuse>1 0.45 0.05 1</diffuse>
+            <emissive>0.9 0.20 0.02 1</emissive>
+          </material>
+          <plugin filename="gz-sim-thermal-system" name="gz::sim::systems::Thermal">
+            <temperature>980</temperature>
+          </plugin>
+        </visual>
+      </link>
+    </model>
+
+    <model name="quench_tank" static="true">
+      <pose>8 -3 0.8 0 0 0</pose>
+      <link name="tank">
+        <collision name="tank_collision">
+          <geometry>
+            <cylinder>
+              <radius>1.2</radius>
+              <length>1.6</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="tank_visual">
+          <geometry>
+            <cylinder>
+              <radius>1.2</radius>
+              <length>1.6</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.18 0.36 0.55 1</ambient>
+            <diffuse>0.22 0.46 0.70 1</diffuse>
+          </material>
+          <plugin filename="gz-sim-thermal-system" name="gz::sim::systems::Thermal">
+            <temperature>335</temperature>
+          </plugin>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

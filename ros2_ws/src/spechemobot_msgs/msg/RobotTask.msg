@@ -1,0 +1,9 @@
+std_msgs/Header header
+string task_id
+string task_type
+string robot_id
+string source_location
+string target_location
+string container_id
+float64 priority
+string state

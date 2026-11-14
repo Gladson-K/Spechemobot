@@ -1,0 +1,12 @@
+string container_id
+string robot_id
+string source_location
+string target_location
+float64 approach_height_m
+---
+bool success
+string message
+float64 duration_s
+---
+string stage
+float64 progress

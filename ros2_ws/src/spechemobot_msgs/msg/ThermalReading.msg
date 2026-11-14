@@ -1,0 +1,8 @@
+std_msgs/Header header
+string sensor_id
+float32 min_temperature_c
+float32 max_temperature_c
+float32 mean_temperature_c
+float32 hotspot_x
+float32 hotspot_y
+bool over_temperature

@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+
+require "json"
+require "optparse"
+require "yaml"
+
+require "spechemobot/http_server"
+require "spechemobot/orchestrator"
+require "spechemobot/ros2_cli"
+
+options = {
+  config: File.expand_path("../config/orchestration.yaml", __dir__),
+  http: false
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: spechemobot-orchestrator [options] [serve|batch|pick|state|health|estop|reset]"
+  opts.on("--config PATH", "YAML configuration path") { |value| options[:config] = value }
+  opts.on("--http", "Run the HTTP API") { options[:http] = true }
+  opts.on("--host HOST", "HTTP bind host") { |value| options[:host] = value }
+  opts.on("--port PORT", Integer, "HTTP bind port") { |value| options[:port] = value }
+  opts.on("--target TEMP", Float, "Batch target temperature in Celsius") { |value| options[:target] = value }
+  opts.on("--hold SECONDS", Float, "Batch hold time in seconds") { |value| options[:hold] = value }
+  opts.on("--product ID", "Batch product identifier") { |value| options[:product] = value }
+  opts.on("--batch-id ID", "Batch identifier") { |value| options[:batch_id] = value }
+  opts.on("--container ID", "Container identifier for pick") { |value| options[:container] = value }
+  opts.on("--robot ID", "Robot identifier for pick") { |value| options[:robot] = value }
+  opts.on("--source LOCATION", "Pick source location") { |value| options[:source] = value }
+  opts.on("--destination LOCATION", "Pick destination location") { |value| options[:destination] = value }
+  opts.on("--disengage", "Release the emergency stop") { options[:engage] = false }
+  opts.on("-h", "--help", "Show this help") do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!(ARGV)
+command = ARGV.shift
+
+config = YAML.safe_load(File.read(options[:config]), aliases: false) || {}
+http_config = config.fetch("http", {})
+ros2_config = config.fetch("ros2", {})
+defaults = config.fetch("defaults", {})
+
+ros2 = Spechemobot::Ros2Cli.new(timeout_s: ros2_config.fetch("timeout_s", 120))
+orchestrator = Spechemobot::Orchestrator.new(ros2: ros2, defaults: defaults)
+
+if options[:http] || command == "serve"
+  host = options[:host] || http_config.fetch("host", "127.0.0.1")
+  port = options[:port] || http_config.fetch("port", 8090)
+  Spechemobot::HttpServer.new(host: host, port: port, orchestrator: orchestrator).start
+  exit
+end
+
+result = case command
+         when "batch"
+           orchestrator.submit_batch(
+             target_temperature_c: options[:target],
+             hold_time_s: options[:hold],
+             product_id: options[:product],
+             batch_id: options[:batch_id]
+           )
+         when "pick"
+           abort("--container is required") unless options[:container]
+           orchestrator.pick(
+             container_id: options[:container],
+             robot_id: options[:robot] || "amr_1",
+             source_location: options[:source] || "conveyor",
+             target_location: options[:destination] || "packaging"
+           )
+         when "state"
+           orchestrator.state
+         when "health"
+           orchestrator.health
+         when "estop"
+           orchestrator.estop(options.fetch(:engage, true))
+         when "reset"
+           orchestrator.reset
+         else
+           warn(parser.banner)
+           exit 2
+         end
+
+puts JSON.pretty_generate(result)
+exit(result[:success] == false || result[:ok] == false ? 1 : 0)

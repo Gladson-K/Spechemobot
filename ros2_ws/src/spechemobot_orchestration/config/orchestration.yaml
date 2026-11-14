@@ -1,0 +1,12 @@
+robot_task_server:
+  ros__parameters:
+    task_duration_s: 2.0
+    publish_rate_hz: 5.0
+batch_orchestrator:
+  ros__parameters:
+    target_temperature_c: 450.0
+    hold_time_s: 8.0
+    product_id: P-100
+    auto_start: false
+    auto_start_delay_s: 10.0
+    auto_pick: true

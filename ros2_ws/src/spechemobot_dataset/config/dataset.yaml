@@ -1,0 +1,8 @@
+record_dataset:
+  ros__parameters:
+    output_dir: /workspace/Spechemobot/datasets/raw
+    session_name: ""
+    capture_rate_hz: 2.0
+    save_rgb: true
+    save_thermal: true
+    max_samples: 0

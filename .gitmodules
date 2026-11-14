@@ -1,0 +1,30 @@
+[submodule "third_party/ros2"]
+	path = third_party/ros2
+	url = https://github.com/ros2/ros2.git
+[submodule "third_party/onnxruntime"]
+	path = third_party/onnxruntime
+	url = https://github.com/microsoft/onnxruntime.git
+[submodule "third_party/llvm-project"]
+	path = third_party/llvm-project
+	url = https://github.com/llvm/llvm-project.git
+[submodule "third_party/tvm"]
+	path = third_party/tvm
+	url = https://github.com/apache/tvm.git
+[submodule "third_party/ros2_control"]
+	path = third_party/ros2_control
+	url = https://github.com/ros-controls/ros2_control.git
+[submodule "third_party/MoveIt2"]
+	path = third_party/MoveIt2
+	url = https://github.com/moveit/moveit2.git
+[submodule "third_party/navigation2"]
+	path = third_party/navigation2
+	url = https://github.com/ros-navigation/navigation2.git
+[submodule "third_party/gz_ros2_control"]
+	path = third_party/gz_ros2_control
+	url = https://github.com/ros-controls/gz_ros2_control.git
+[submodule "third_party/o3de"]
+	path = third_party/o3de
+	url = https://github.com/o3de/o3de.git
+[submodule "third_party/o3de-extras"]
+	path = third_party/o3de-extras
+	url = https://github.com/o3de/o3de-extras.git

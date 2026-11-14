@@ -1,0 +1,37 @@
+# Local environment
+deployment/docker-v3/.env
+.env
+
+# Build output
+build/
+install/
+log/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+sim/o3de/**/build/
+sim/o3de/**/Cache/
+sim/o3de/**/user/
+third_party/*/build/
+third_party/*/install/
+ccache/
+*.onnx.tmp
+
+# Generated simulation data
+datasets/tennessee_eastman/raw/
+datasets/synthetic/
+datasets/mvtec_ad/
+datasets/**/*.bag
+datasets/**/*.db3
+datasets/**/*.mcap
+datasets/**/rosbag2_*/
+
+# Models downloaded or exported locally
+models/
+!models/README.md
+
+# Editor and OS noise
+.vscode/
+.idea/
+*.swp
+.DS_Store

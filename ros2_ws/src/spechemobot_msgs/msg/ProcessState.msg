@@ -1,0 +1,14 @@
+std_msgs/Header header
+string batch_id
+string phase
+float64 reactor_temperature_c
+float64 reactor_pressure_kpa
+float64 reactor_level_percent
+float64 feed_flow_kg_s
+float64 product_flow_kg_s
+float64 furnace_temperature_c
+float64 furnace_setpoint_c
+float64 heater_power_kw
+bool interlock_active
+bool emergency_stop
+string[] active_faults

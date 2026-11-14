@@ -1,0 +1,9 @@
+http:
+  host: 127.0.0.1
+  port: 8090
+ros2:
+  timeout_s: 120
+defaults:
+  target_temperature_c: 450.0
+  hold_time_s: 8.0
+  product_id: P-100
